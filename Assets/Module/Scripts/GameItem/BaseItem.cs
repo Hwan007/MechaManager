@@ -2,28 +2,21 @@ using System.Collections.Generic;
 
 namespace GameItem
 {
-
-    public interface IModule
+    public interface IModuleHandler
     {
-        public IModule Initailize();
+        public bool TryGetModule<TModule>(out TModule module) where TModule : class, IModule;
+        public bool TryAddModule<TModule>(TModule module) where TModule : class, IModule;
     }
 
-    public interface IModule<THandler> : IModule
-    {
-
-    }
-
-    public abstract class BaseItem
+    public abstract class BaseItem : IModuleHandler
     {
         private string id;
         private LinkedList<IModule> modules = new LinkedList<IModule>();
 
-        public abstract void InitializeModule();
-
         public bool TryGetModule<TModule>(out TModule module) where TModule : class, IModule
         {
             var mo = modules.First;
-            while(ReferenceEquals(mo, null))
+            while (ReferenceEquals(mo, null))
             {
                 if (mo.Value is TModule target)
                 {
@@ -34,6 +27,18 @@ namespace GameItem
             module = null;
             return false;
         }
-    }
 
+        public bool TryAddModule<TModule>(TModule module) where TModule : class, IModule
+        {
+            if (TryGetModule<TModule>(out _))
+            {
+                return false;
+            }
+            else
+            {
+                modules.AddLast(module);
+                return true;
+            }
+        }
+    }
 }

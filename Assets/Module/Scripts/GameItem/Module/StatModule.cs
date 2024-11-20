@@ -3,13 +3,8 @@
 
 namespace GameItem
 {
-    public class StatModule<TStatData> : IModule<IStatHandler<TStatData>>, IStatHandler<TStatData> where TStatData : struct
+    public class StatModule<TStatData> : Module<IStatHandler<TStatData>>, IStatHandler<TStatData> where TStatData : struct
     {
-        IModule IModule.Initailize()
-        {
-            throw new System.NotImplementedException();
-        }
-
         TStatData IStatHandler<TStatData>.ModifyStat(TStatData data)
         {
             throw new NotImplementedException();
